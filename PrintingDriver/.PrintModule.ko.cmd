@@ -1,0 +1,1 @@
+cmd_/home/zzh/3/3.9/PrintingDriver/PrintModule.ko := ld -r -m elf_x86_64 -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/zzh/3/3.9/PrintingDriver/PrintModule.ko /home/zzh/3/3.9/PrintingDriver/PrintModule.o /home/zzh/3/3.9/PrintingDriver/PrintModule.mod.o ;  true
