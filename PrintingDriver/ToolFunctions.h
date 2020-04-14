@@ -12,6 +12,5 @@
 #endif
 
 void MEM_PRINT(unsigned long addr, unsigned long size);
-int SetPageReadAndWriteAttribute(unsigned long ulAddress);
 
 #endif

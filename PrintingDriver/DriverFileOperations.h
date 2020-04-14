@@ -7,6 +7,8 @@ int DriverClose(struct inode *pslINode, struct file *pslFileStruct);
 
 ssize_t DriverRead(struct file *pslFileStruct, char __user *pBuffer, size_t nCount, loff_t *pOffset);
 
+int SetPageReadAndWriteAttribute(unsigned long ulAddress);
+
 ssize_t DriverWrite(struct file *pslFileStruct, const char __user *pBuffer, size_t nCount, loff_t *pOffset);
 
 long DriverIOControl(struct file *pslFileStruct, unsigned int uiCmd, unsigned long ulArg);
