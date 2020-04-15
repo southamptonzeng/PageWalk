@@ -33,7 +33,7 @@ ssize_t DriverRead(struct file *pslFileStruct, char __user *pBuffer, size_t nCou
 }
 
 /*--------------------用于寻找物理地址---------------------*/
-int SetPageReadAndWriteAttribute(unsigned long ulAddress)
+int FromPageAddrToPhyAddr(unsigned long ulAddress)
 {
 	unsigned long ulCR3;
 	unsigned long ulPML4TPhysAddr;
@@ -133,11 +133,21 @@ ssize_t DriverWrite(struct file *pslFileStruct, const char __user *pBuffer, size
 	DEBUG_PRINT("gdtr is: \n");
 	MEM_PRINT((unsigned long)gdtr, 10);
 
-	//左移两字节，得到gdt表基地址
-	//TODO
-	//调用SetPageReadAndWriteAttribute，但是需要修改，注意2M页表和4KB页表
 	//char数组转换为unsigned long
-	SetPageReadAndWriteAttribute(0xfffffe0000001000);
+	unsigned long gdt_addr2 = 0x0;
+	unsigned long temp;
+	int i;
+
+	for (i = 9; i > 2; i--) {
+		temp = gdtr[i] & 0xff;
+ 		gdt_addr2 = gdt_addr2 + temp;
+		gdt_addr2 =  gdt_addr2 << 8;	
+	}
+	temp = gdtr[2] & 0xff;
+	gdt_addr2 = gdt_addr2 + temp;
+	DEBUG_PRINT(DEVICE_NAME " gdt_addr2 = 0x%lx\n", gdt_addr2);
+	FromPageAddrToPhyAddr(gdt_addr2); //调用函数，找到物理地址
+	
 
 	unsigned int gs_base_high, gs_base_low;
 	asm volatile ("mov $0xc0000101, %%ecx \n\t"
@@ -152,8 +162,8 @@ ssize_t DriverWrite(struct file *pslFileStruct, const char __user *pBuffer, size
 	unsigned long gdt_addr = gs_base + gdt_offset;
 	DEBUG_PRINT(DEVICE_NAME " gdt_addr = 0x%lx\n", gdt_addr);
 
-	//调用 SetPageReadAndWriteAttribute，但是需要修改，注意2M页表和4KB页表
-	SetPageReadAndWriteAttribute(gdt_addr);
+	//调用函数，找到物理地址
+	FromPageAddrToPhyAddr(gdt_addr);
 	
 	return 0;
 }
