@@ -1,0 +1,2 @@
+# Write a program to find the physical address corresponding to a linear address mapping, and confirm that different linear addresses can map to the same physical address. 
+> The linear address in the GDTR register queries the page table for a 4K page, while the linear address in the MSR register queries the page table for a 2M page. However, the final corresponding physical address is 0x7b608000.
